@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -65,7 +64,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Basic Omni-Drive", group="Linear OpMode")
 //@Disabled
-public class BasicOmniDrive extends LinearOpMode {
+public class BasicOmniDrive2 extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -111,9 +110,9 @@ public class BasicOmniDrive extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   =  gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
-            double lateral =  -gamepad1.right_stick_y;
-            double yaw     =  -gamepad1.left_stick_y;
+            double axial   =  gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double lateral =  0;//-gamepad1.right_stick_y;
+            double yaw     =  0;//-gamepad1.left_stick_y;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
