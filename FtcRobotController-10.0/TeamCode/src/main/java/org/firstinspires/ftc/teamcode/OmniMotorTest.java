@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -64,7 +65,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Basic Omni-Drive", group="Linear OpMode")
 //@Disabled
-public class BasicOmniDrive2 extends LinearOpMode {
+public class OmniMotorTest extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -110,16 +111,20 @@ public class BasicOmniDrive2 extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   =  gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  0;//-gamepad1.right_stick_y;
-            double yaw     =  0;//-gamepad1.left_stick_y;
+            double axial   =  gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
+            double lateral =  -gamepad1.left_stick_x; // strafe
+            double yaw     =  -gamepad1.left_stick_y;
+
+            //double axial   =  gamepad1.left_stick_x;  // Note: pushing stick forward gives negative value
+            //double lateral =  -gamepad1.right_stick_y; // left joystick forward, backward, turn, right no worky
+            //double yaw     =  -gamepad1.left_stick_y;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = axial + lateral + yaw;
-            double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
+            double leftFrontPower  = axial + lateral + yaw; //DON'T MESS WITH THESE VALUES!
+            double rightFrontPower = axial + lateral - yaw; //WILL BREAK MANY THINGS!
+            double leftBackPower   = axial - lateral + yaw; //DON'T MESS WITH THESE VALUES!
+            double rightBackPower  = axial - lateral - yaw; // WILL BREAK MANY THINGS!
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
