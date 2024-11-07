@@ -33,7 +33,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -68,11 +70,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class OmniMotorTest extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
+    public ElapsedTime runtime = new ElapsedTime();
+    public DcMotor leftFrontDrive = null;
+    public DcMotor leftBackDrive = null;
+    public DcMotor rightFrontDrive = null;
+    public DcMotor rightBackDrive = null;
+    public Servo arm = null;
+
+    public final static double ARM_HOME = 0.0;
+    public final static double ARM_MIN_RANGE = 0.0;
+    public final static double ARM_MAX_RANGE = 0.5;
+    double armPosition = ARM_HOME;
+    final double ARM_SPEED = 0.01;
 
     @Override
     public void runOpMode() {
@@ -83,6 +92,8 @@ public class OmniMotorTest extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        arm = hwMap.servo.get("arm");
+        arm.setPosition(ARM_HOME);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -114,6 +125,17 @@ public class OmniMotorTest extends LinearOpMode {
             double axial   =  gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
             double lateral =  -gamepad1.left_stick_x; // strafe
             double yaw     =  -gamepad1.left_stick_y;
+
+            //Servo Code
+            if (gamepad1.a)
+                armPosition += ARM_SPEED;
+            else if (gamepad1.y)
+                armPosition -= ARM_SPEED;
+
+            //clips the servo range
+            armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+            arm.setPosition(armPosition);
+
 
             //double axial   =  gamepad1.left_stick_x;  // Note: pushing stick forward gives negative value
             //double lateral =  -gamepad1.right_stick_y; // left joystick forward, backward, turn, right no worky
@@ -163,6 +185,8 @@ public class OmniMotorTest extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
 
             // Show the elapsed game time and wheel power.
+            telemetry.addData("arm", "%.2f", armPosition); //what position is the servo at?
+
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
