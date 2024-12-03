@@ -92,7 +92,7 @@ public class OmniMotorTest extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        arm = hwMap.servo.get("arm");
+        arm = hardwareMap.servo.get("arm");
         arm.setPosition(ARM_HOME);
 
         // ########################################################################################
@@ -123,7 +123,7 @@ public class OmniMotorTest extends LinearOpMode {
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   =  gamepad1.left_stick_x;  // Note: pushing stick forward gives negative value
-            double lateral = null
+            double lateral = 0;
             //double lateral =  -gamepad1.left_stick_x; // strafe
             double yaw     =  -gamepad1.left_stick_y;
 
