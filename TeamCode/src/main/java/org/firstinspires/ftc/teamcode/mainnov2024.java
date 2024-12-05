@@ -39,7 +39,7 @@ public class mainnov2024 extends LinearOpMode {
   private Servo left_hand;
 
   double gripper_lateral_pos;
-
+  //done 
   /**
    * This sample contains the bare minimum Blocks for any regular OpMode. The 3 blue
    * Comment Blocks show where to place Initialization code (runs once, after touching the
@@ -55,7 +55,7 @@ public class mainnov2024 extends LinearOpMode {
     // Make sure to press START + A when the gamepad is connected to set it to gamepad1
     waitForStart();
     if (opModeIsActive()) {
-      gripper_lateral_pos = 1;
+      gripper_lateral_pos = 1;// did not use this
       while (opModeIsActive()) {
         telemetry.update();
         left_hand.scaleRange(0.4, 1);
