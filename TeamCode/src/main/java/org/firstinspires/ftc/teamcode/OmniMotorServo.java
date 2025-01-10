@@ -138,8 +138,8 @@ public class OmniMotorServo extends LinearOpMode {
             //double lateral = 0;
             
             double axial   =  gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
-            double lateral =  -gamepad1.left_stick_x; // strafe
-            double yaw     =  -gamepad1.left_stick_y;
+            double lateral =  gamepad1.left_stick_x; // strafe
+            double yaw     =  gamepad1.left_stick_y; // turning
 
             /*
             //Servo Code
