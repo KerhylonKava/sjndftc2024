@@ -66,9 +66,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic Omni-Drive-with-Servo", group="Linear OpMode")
+@TeleOp(name="Omni-Drive-with-Lift", group="Linear OpMode")
 //@Disabled
-public class OmniMotorServo extends LinearOpMode {
+public class OmniMotorLift extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     public ElapsedTime runtime = new ElapsedTime();
@@ -76,6 +76,9 @@ public class OmniMotorServo extends LinearOpMode {
     public DcMotor leftBackDrive = null;
     public DcMotor rightFrontDrive = null;
     public DcMotor rightBackDrive = null;
+
+    public DcMotor george = null; //lift but peter said to name it george
+    public DcMotor whack = null; //arm hinge
 
     public final static double LEFT_HAND_HOME = 0.4;
     /* use/integrate this later \|/ */
@@ -95,6 +98,11 @@ public class OmniMotorServo extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+
+        george = hardwareMap.get(DcMotor.class, "sir_george_liftington"); //lift
+        
+        whack = hardwareMap.get(DcMotor.class, "whackamole"); // arm hinge
+
         /* use/integrate this later
         arm = hardwareMap.servo.get("arm");
         */
@@ -112,10 +120,13 @@ public class OmniMotorServo extends LinearOpMode {
         // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        george.setDirection(DcMotor.Direction.FORWARD);
+        whack.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -137,9 +148,9 @@ public class OmniMotorServo extends LinearOpMode {
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             //double lateral = 0;
             
-            double axial   =  gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
+            double axial   =  -gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x; // strafe
-            double yaw     =  gamepad1.left_stick_y; // turning
+            double yaw     =  gamepad1.left_stick_y; // forward/backward
 
             /*
             //Servo Code
@@ -163,7 +174,24 @@ public class OmniMotorServo extends LinearOpMode {
             double rightFrontPower = axial + lateral - yaw; //WILL BREAK MANY THINGS!
             double leftBackPower   = axial - lateral + yaw; //DON'T MESS WITH THESE VALUES!
             double rightBackPower  = axial - lateral - yaw; // WILL BREAK MANY THINGS!
+            double georgePower = 0;
+            double whackPower = 0;
+
+            //double georgePower = gamepad1.dpad_up; //does not work
+            if (gamepad1.dpad_up) {
+              georgePower = 1;
+            }
+            if (gamepad1.dpad_down) {
+              georgePower = -1;
+            }
+
+            if (gamepad1.y) {
+              whackPower = 0.2;
+            }
             
+            if (gamepad1.a) {
+              whackPower = -0.2;
+            }
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -200,6 +228,8 @@ public class OmniMotorServo extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+            george.setPower(georgePower);
+            whack.setPower(whackPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("left hand", "%.2f", gripper_lateral_pos); //what position is the servo at?
@@ -207,6 +237,8 @@ public class OmniMotorServo extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("Sir George Liftington the THIRD. (Just to be clear, this is not the third iteration of George).","%4.2f", georgePower);
+            telemetry.addData("Lord Whackamole the Umpteenth","%4.2f", whackPower);
             telemetry.update();
         }
     }
